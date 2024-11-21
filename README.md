@@ -1,4 +1,3 @@
-# BLENDED_LEARNING
 # Implementation-of-Stochastic-Gradient-Descent-SGD-Regressor
 
 ## AIM:
@@ -21,53 +20,45 @@ Program to implement SGD Regressor for linear regression.
 Developed by: POOJASREE B
 RegisterNumber: 212223040148 
 */
+# Program to implement SGD Regressor for linear regression.
+# Importing necessary libraries
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error, r2_score
-import matplotlib.pyplot as plt
 
-data = pd.read_csv('car_price_prediction_.csv')
+# Load the dataset
+file_path = 'https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-ML240EN-SkillsNetwork/labs/encoded_car_data.csv'
+df = pd.read_csv(file_path)
 
-print(data.head())
+# Select relevant features and target variable
+X = df.drop(columns=['price'])  # All columns except 'price'
+y = df['price']  # Target variable
 
-X = data[['Year', 'Engine Size', 'Mileage', 'Condition']] 
-y = data['Price']
-
-X = pd.get_dummies(X, drop_first=True)
-
+# Split the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-sgd_model = SGDRegressor(max_iter=1000, tol=1e-3)
-
+# Train the SGD Regressor
+sgd_model = SGDRegressor(max_iter=1000, tol=1e-3, random_state=42)  # Default settings
 sgd_model.fit(X_train, y_train)
 
+# Predictions on test set
 y_pred = sgd_model.predict(X_test)
 
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-print(f'Mean Squared Error: {mse}')
-print(f'R-squared: {r2}')
+# Evaluate the model
+print("Model Performance:")
+print("Mean Squared Error (MSE):", mean_squared_error(y_test, y_pred))
+print("R-squared:", r2_score(y_test, y_pred))
 
-cv_scores = cross_val_score(sgd_model, X, y, cv=5)  # 5-fold cross-validation
-print(f'Cross-Validation Scores: {cv_scores}')
-print(f'Average Cross-Validation Score: {np.mean(cv_scores)}')
-
-plt.figure(figsize=(10, 6))
-plt.scatter(y_test, y_pred, color='blue', label='Predicted Prices')
-plt.plot([y.min(), y.max()], [y.min(), y.max()], 'r--', lw=2)  # Line for perfect prediction
-plt.xlabel('Actual Prices')
-plt.ylabel('Predicted Prices')
-plt.title('Actual vs Predicted Car Prices using SGD Regressor')
-plt.legend()
-plt.show()
+# Print model coefficients
+print("\nModel Coefficients:")
+print("Coefficients:", sgd_model.coef_)
+print("Intercept:", sgd_model.intercept_)
 ```
 
 ## Output:
-![image](https://github.com/user-attachments/assets/526d4aec-210a-4380-9c59-acafee7713f0)
+![image](https://github.com/user-attachments/assets/e5cd85ea-5ebf-465e-b67a-d6799b5db8d5)
 
-![image](https://github.com/user-attachments/assets/26d0fa87-2da4-4e66-a963-f3aeef620c9a)
 
 
 ## Result:
